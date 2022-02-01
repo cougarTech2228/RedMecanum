@@ -18,6 +18,16 @@ public final class Constants {
 	public static final int LEFT_FRONT_MOTOR_CAN_ID = 13;
 	public static final int LEFT_REAR_MOTOR_CAN_ID = 14;
 
-	public static final double OPEN_RAMP_SECONDS_TO_FULL = 1.0;
+	public static final int SHOOTER_MASTER_CAN_ID = 41;
+	public static final int SHOOTER_FOLLOWER_CAN_ID = 42;
+	public static final double SHOOTER_MAX_OUTPUT = 1;
+
+    public static final int SHOOTER_CURRENT_LIMIT = 40;
+	public static final float SHOOTER_CURRENT_DURATION = 1.5f;
+	public static final int SHOOTER_CONTINUOUS_CURRENT_LIMIT = 35;
+
+    public final static int kTimeoutMs = 30;
+
+	public static final double OPEN_RAMP_SECONDS_TO_FULL = 4.0;
 	public static final double JOYSTICK_DEADBAND_PERCENTAGE = 0.25;
 }

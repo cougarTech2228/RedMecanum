@@ -1,24 +1,25 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DrivebaseSubsystem extends SubsystemBase {
-    private WPI_TalonSRX m_rightFront = new WPI_TalonSRX(Constants.RIGHT_FRONT_MOTOR_CAN_ID);
-    private WPI_TalonSRX m_rightBack = new WPI_TalonSRX(Constants.RIGHT_REAR_MOTOR_CAN_ID);
-    private WPI_TalonSRX m_leftFront = new WPI_TalonSRX(Constants.LEFT_FRONT_MOTOR_CAN_ID);
-    private WPI_TalonSRX m_leftBack = new WPI_TalonSRX(Constants.LEFT_REAR_MOTOR_CAN_ID);
+    private WPI_TalonFX m_rightFront = new WPI_TalonFX(Constants.RIGHT_FRONT_MOTOR_CAN_ID);
+    private WPI_TalonFX m_rightBack = new WPI_TalonFX(Constants.RIGHT_REAR_MOTOR_CAN_ID);
+    private WPI_TalonFX m_leftFront = new WPI_TalonFX(Constants.LEFT_FRONT_MOTOR_CAN_ID);
+    private WPI_TalonFX m_leftBack = new WPI_TalonFX(Constants.LEFT_REAR_MOTOR_CAN_ID);
 
     private static final int kJoystickChannel = 0;
 
     private MecanumDrive m_robotDrive;
-    private Joystick m_stick;
+    private static XboxController m_controller = new XboxController(0);
 
     public DrivebaseSubsystem() {
 
@@ -41,8 +42,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
         m_rightBack.setNeutralMode(NeutralMode.Brake);
 
         m_robotDrive = new MecanumDrive(m_leftFront, m_leftBack, m_rightFront, m_rightBack);
-
-        m_stick = new Joystick(kJoystickChannel);
     }
 
     private double deadband(final double value) {
@@ -64,12 +63,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
 
-        m_robotDrive.driveCartesian(deadband(-m_stick.getY()),
-                deadband(m_stick.getX()),
-                deadband(m_stick.getZ()));
+        m_robotDrive.driveCartesian(deadband(-m_controller.getLeftY()),
+                deadband(m_controller.getLeftX()),
+                deadband(m_controller.getRightX()));
     }
 
-    public Joystick getJoystick() {
-        return m_stick;
+    public static XboxController getController() {
+        return m_controller;
     }
 }
