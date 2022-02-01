@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
   WPI_TalonFX m_shooterFollower;
 
   private NetworkTableEntry m_velocityEntry;
-  private XboxController m_xboxController = new XboxController(0);
+  private XboxController m_xboxController = DrivebaseSubsystem.getController();
   private PowerDistribution m_pD = new PowerDistribution();
   private boolean isShooting = false;
 
@@ -54,11 +54,11 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(m_xboxController.getAButton() && !isShooting){
+    if(m_xboxController.getAButtonPressed() && !isShooting){
       isShooting = true;
       setMotors(m_velocityEntry.getDouble(0));
    }
-   else if(m_xboxController.getBButton() && isShooting){
+   else if(m_xboxController.getAButtonPressed() && isShooting){
       stopMotors();
       isShooting = false;
    }
