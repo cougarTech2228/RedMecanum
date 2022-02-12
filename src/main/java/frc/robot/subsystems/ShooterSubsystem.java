@@ -24,10 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
   WPI_TalonFX m_shooterMaster;
   WPI_TalonFX m_shooterFollower;
 
-  private NetworkTableEntry m_velocityEntry;
-  private PowerDistribution m_pD = new PowerDistribution();
-  private boolean isShooting = false;
-
   /** Creates a new ExampleSubsystem. */
   public ShooterSubsystem() {
     m_shooterMaster = new WPI_TalonFX(Constants.SHOOTER_MASTER_CAN_ID);
@@ -38,10 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     m_shooterMaster.setInverted(false);
     m_shooterFollower.setInverted(true);
-
-    m_velocityEntry = Shuffleboard.getTab("Shooter Velocity Adjuster").add("Shooter Velocity", 1)
-    .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", Constants.SHOOTER_MAX_OUTPUT)).getEntry();
-   m_velocityEntry.setDefaultNumber(0);
   }
 
   public void setMotors(double percent){
@@ -50,23 +42,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stopMotors(){
     m_shooterMaster.stopMotor();
   }
-  // @Override
-  // public void periodic() {
-  //   // calculation for motor velocity determined from network tables
-  //   //double percentToScore = calcPercentToShoot(ShooterVisionSubsystem.getDistanceFt()); 
-
-  //   if(OI.getXboxAButton() && !isShooting){
-  //     isShooting = true;
-  //     setMotors(m_velocityEntry.getDouble(0));
-  //  }
-  //  else if(OI.getXboxBButton() && isShooting){
-  //     stopMotors();
-  //     isShooting = false;
-  //  }
-  //  SmartDashboard.putNumber("Leader Motor Draw", m_pD.getCurrent(9));
-  //  SmartDashboard.putNumber("Follower Motor Draw", m_pD.getCurrent(10));
-  //  SmartDashboard.putNumber("Motor Voltage", m_pD.getVoltage());
-  // }
 
    private void configMotor(WPI_TalonFX motor){
 
@@ -84,7 +59,6 @@ public class ShooterSubsystem extends SubsystemBase {
         config.supplyCurrLimit.currentLimit = Constants.SHOOTER_CONTINUOUS_CURRENT_LIMIT;
         motor.configAllSettings(config);
     }
-
 
 public double getCalculatedShooterPercent(String shotType){
   double distance = ShooterVisionSubsystem.getDistanceFt();

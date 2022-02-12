@@ -34,8 +34,8 @@ public final class Constants {
 
     public final static int kTimeoutMs = 30;
 
-	public static final double OPEN_RAMP_SECONDS_TO_FULL = 4.0;
-	public static final double JOYSTICK_DEADBAND_PERCENTAGE = 0.25;
+	public static final double OPEN_RAMP_SECONDS_TO_FULL = .75;
+	public static final double JOYSTICK_DEADBAND_PERCENTAGE = 0.1;
 
 	public static final int ACQUIRER_DEPLOY_MOTOR_CAN_ID = 22;
 	public static final int ACQUIRER_SPIN_MOTOR_CAN_ID = 21;
@@ -48,4 +48,7 @@ public final class Constants {
 
 	public static final double HIGH_SHOOT_SPEED = .72;
 	public static final double LOW_SHOOT_SPEED = .55;
+
+	public static final int SHOOTING_DRIVING_MODE = 1;
+	public static final int ACQUIRING_DRIVING_MODE = 0;
 }

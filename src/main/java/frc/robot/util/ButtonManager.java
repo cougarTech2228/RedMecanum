@@ -11,6 +11,7 @@ import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.AcquisitionSubsystem;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterVisionSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 
 public class ButtonManager {
@@ -21,12 +22,16 @@ public class ButtonManager {
     private StorageSubsystem m_storageSubsystem;
     private DrivebaseSubsystem m_drivebaseSubsystem;
     private AcquisitionSubsystem m_acquisitionSubsystem;
+    private ShooterVisionSubsystem m_shooterVisionSubsystem;
 
-    public ButtonManager(ShooterSubsystem shooterSubsystem, StorageSubsystem storageSubsystem, DrivebaseSubsystem drivebaseSubsystem, AcquisitionSubsystem acquisitionSubsystem) {
+    public ButtonManager(ShooterSubsystem shooterSubsystem, StorageSubsystem storageSubsystem,
+     DrivebaseSubsystem drivebaseSubsystem, AcquisitionSubsystem acquisitionSubsystem, ShooterVisionSubsystem shooterVisionSubsystem) {
+
         m_shooterSubsystem = shooterSubsystem;
         m_storageSubsystem = storageSubsystem;
         m_drivebaseSubsystem = drivebaseSubsystem;
         m_acquisitionSubsystem = acquisitionSubsystem;
+        m_shooterVisionSubsystem = shooterVisionSubsystem;
     }
 
     public void configureButtonBindings() {
@@ -56,9 +61,20 @@ public class ButtonManager {
             new ConditionalCommand(
                 new InstantCommand(() -> {m_acquisitionSubsystem.stopSpinnerMotor(); m_storageSubsystem.stopMotors();}),
                 new InstantCommand(() -> {m_acquisitionSubsystem.setSpinnerMotor(Constants.ACQUIRER_SPINNER_SPEED); m_storageSubsystem.setDriveMotor();}),
-                m_acquisitionSubsystem :: getIsSpinning));
+                m_acquisitionSubsystem :: isAcquiring));
         
         bButton.whenPressed(new AutonomousCommand(m_drivebaseSubsystem, m_shooterSubsystem, m_storageSubsystem, m_acquisitionSubsystem));
+
+        xButton.whenPressed(new InstantCommand(() -> {
+            if(m_drivebaseSubsystem.getDrivingMode() == Constants.SHOOTING_DRIVING_MODE){
+                m_drivebaseSubsystem.setDrivingMode(Constants.ACQUIRING_DRIVING_MODE);
+                m_shooterVisionSubsystem.setCameras(Constants.ACQUIRING_DRIVING_MODE);
+            }    
+            else{
+                m_drivebaseSubsystem.setDrivingMode(Constants.SHOOTING_DRIVING_MODE);
+                m_shooterVisionSubsystem.setCameras(Constants.SHOOTING_DRIVING_MODE);
+            }
+        }));
     }
 
 }

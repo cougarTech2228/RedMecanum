@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.AcquisitionSubsystem;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -28,7 +29,10 @@ public class RobotContainer {
   private final ShooterVisionSubsystem m_shooterVisionSubsystem = new ShooterVisionSubsystem();
   private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
   private final AcquisitionSubsystem m_acquisitionSubsystem = new AcquisitionSubsystem();
-  private final ButtonManager m_buttonManager = new ButtonManager(m_shooterSubsystem, m_storageSubsystem, m_drivebaseSubsystem, m_acquisitionSubsystem);
+  private final ButtonManager m_buttonManager = 
+  new ButtonManager(m_shooterSubsystem, m_storageSubsystem, m_drivebaseSubsystem, m_acquisitionSubsystem, m_shooterVisionSubsystem);
+  private final AutonomousCommand m_autoCommand = 
+  new AutonomousCommand(m_drivebaseSubsystem, m_shooterSubsystem, m_storageSubsystem, m_acquisitionSubsystem);
 
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -36,6 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     m_buttonManager.configureButtonBindings();
+    m_shooterVisionSubsystem.setCameras(Constants.ACQUIRING_DRIVING_MODE);
   }
 
 
@@ -44,10 +49,10 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return m_autoCommand;
-  // }
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return m_autoCommand;
+  }
   public static DrivebaseSubsystem getDrivebaseSubsystem(){
     return m_drivebaseSubsystem;
   }

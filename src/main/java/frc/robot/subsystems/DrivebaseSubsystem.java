@@ -20,6 +20,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     private MecanumDrive m_robotDrive;
 
+    private int m_drivingMode = 0;
+
     public DrivebaseSubsystem() {
 
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -61,11 +63,34 @@ public class DrivebaseSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        double X;
+        double Y;
+        double Z;
+
+        if(getControlType() == 1) {
+            Y = OI.getXboxLeftJoystickY();
+            X = OI.getXboxLeftJoystickX();
+            Z = OI.getXboxRightJoystickX();
+        } else if(getControlType() == 20) {
+            Y = -OI.getJoystickThrottleY();
+            X = OI.getJoystickThrottleX();
+            Z = OI.getJoystickThrottleZ();
+        } else {
+            Y = 0;
+            X = 0;
+            Z = 0;
+        }
+
+        if(m_drivingMode == Constants.SHOOTING_DRIVING_MODE) {
+            Y = -Y;
+            X = -X;
+        } 
+
         if(!AlignToTargetCommand.getAlignMode() && !AutonomousCommand.getIsAuto())// && !DriverStation.isAutonomous())
         {
-        m_robotDrive.driveCartesian(deadband(-OI.getXboxLeftJoystickY()),
-                deadband(OI.getXboxLeftJoystickX()),
-                deadband(OI.getXboxRightJoystickX()));
+        m_robotDrive.driveCartesian(deadband(-Y),
+                deadband(X),
+                deadband(Z));
         } else {
             m_robotDrive.feed();
         }
@@ -82,5 +107,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
         m_leftFront.setNeutralMode(NeutralMode.Coast);
         m_rightBack.setNeutralMode(NeutralMode.Coast);
         m_rightFront.setNeutralMode(NeutralMode.Coast);
+    }
+    public void setMotorsToBrake(){
+        m_leftBack.setNeutralMode(NeutralMode.Brake);
+        m_leftFront.setNeutralMode(NeutralMode.Brake);
+        m_rightBack.setNeutralMode(NeutralMode.Brake);
+        m_rightFront.setNeutralMode(NeutralMode.Brake);
+    }
+    //A value of 1 refers to the xbox controller, a value of 20 refers to the joystick.
+    public int getControlType(){
+        return DriverStation.getJoystickType(0);
+    } 
+    public void setDrivingMode(int modeNum){
+        m_drivingMode = modeNum;
+    }
+    public int getDrivingMode(){
+        return m_drivingMode;
     }
 }

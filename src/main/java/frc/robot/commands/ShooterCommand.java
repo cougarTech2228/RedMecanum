@@ -8,6 +8,12 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
+
+import java.util.Map;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,6 +25,8 @@ public class ShooterCommand extends SequentialCommandGroup{
   private final ShooterSubsystem m_shooterSubsystem;
   private final StorageSubsystem m_storageSubsystem;
   private final DrivebaseSubsystem m_drivebaseSubsystem;
+  
+  //private NetworkTableEntry m_velocityEntry;
   private static boolean kIsShooting = false;
   private int m_typeOfShot;
   /** 1 = high auto
@@ -40,6 +48,10 @@ public class ShooterCommand extends SequentialCommandGroup{
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem, drivebaseSubsystem, storageSubsystem);
 
+    
+  //   m_velocityEntry = Shuffleboard.getTab("Shooter Velocity Adjuster").add("Shooter Velocity", Constants.HIGH_SHOOT_SPEED)
+  //   .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", Constants.SHOOTER_MAX_OUTPUT)).getEntry();
+  //  m_velocityEntry.setDefaultNumber(0);
 
     switch(m_typeOfShot){
       case 1:

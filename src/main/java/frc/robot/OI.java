@@ -1,6 +1,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
@@ -35,11 +36,14 @@ public class OI {
     // Start the command when the button is released and let it run the command
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
+    private static final int kXboxChannel = 0;
+    private static final int kJoystickChannel = 0;
 
     private static XboxController m_xboxController;
-   
+    private static Joystick m_stick;  
     public OI() {
-        m_xboxController = new XboxController(0);
+        m_xboxController = new XboxController(kXboxChannel);
+        m_stick = new Joystick(kJoystickChannel);
     }
 
     public static boolean getXboxAButton() {
@@ -150,4 +154,109 @@ public class OI {
     public static void setXboxRumbleStop() {
         OI.setXboxRumbleSpeed(0);
     }
+
+    public static boolean getJoystickTrigger() {
+        return m_stick.getTrigger();
+    }
+
+    public static boolean getJoystickButton11() {
+        return m_stick.getRawButton(11);
+    }
+
+    public static boolean getJoystickButton12() {
+        return m_stick.getRawButton(12);
+    }
+
+    public static boolean getJoystickButton10() {
+        return m_stick.getRawButton(10);
+    }
+
+    public static boolean getJoystickButton9() {
+        return m_stick.getRawButton(9);
+    }
+
+    public static boolean getJoystickButton8() {
+        return m_stick.getRawButton(8);
+    }
+
+    public static boolean getJoystickButton7() {
+        return m_stick.getRawButton(7);
+    }
+
+    public static boolean getJoystickButton6() {
+        return m_stick.getRawButton(6);
+    }
+
+    public static boolean getJoystickButton5() {
+        return m_stick.getRawButton(5);
+    }
+
+    public static boolean getJoystickButton4() {
+        return m_stick.getRawButton(4);
+    }
+
+    public static boolean getJoystickButton3() {
+        return m_stick.getRawButton(3);
+    }
+
+    public static boolean getJoystickButton2() {
+        return m_stick.getRawButton(2);
+    }
+   
+    public static boolean getJoystickHatUp() {
+        return m_stick.getPOV() == 0;
+    }
+
+    public static boolean getJoystickHatUpRight() {
+        return m_stick.getPOV() == 45;
+    }
+
+    public static boolean getJoystickHatRight() {
+        return m_stick.getPOV() == 90;
+    }
+
+    public static boolean getJoystickHatRightDown() {
+        return m_stick.getPOV() == 135;
+    }
+
+    public static boolean getJoystickHatDown() {
+        return m_stick.getPOV() == 180;
+    }
+
+    public static boolean getJoystickHatDownLeft() {
+        return m_stick.getPOV() == 225;
+    }
+
+    public static boolean getJoystickHatLeft() {
+        return m_stick.getPOV() == 270;
+    }
+
+    public static boolean getJoystickHatUpLeft() {
+        return m_stick.getPOV() == 315;
+    }
+
+    // When the slider is pushed closest to the -, a value of -1.0 is returned, 1.0 is returned at the plus.
+    public static double getJoystickSliderValue() {
+        return -m_stick.getThrottle();
+    }
+
+    // Pushing the joystick fully left returns a value of -1.0, pushing it fully right returns a value of 1.0.
+    public static double getJoystickThrottleX() {
+        return m_stick.getX();
+    }
+
+    // Pushing the joystick fully forwards returns a value of 1.0, pushing it fully backwards returns a value of -1.0.
+    public static double getJoystickThrottleY() {       
+        return -m_stick.getY();
+    }
+
+    // Twisting the joystick fully left returns a value of -1.0, twisting it fully right returns a value of 1.0.
+    public static double getJoystickThrottleZ() {
+        return m_stick.getZ();
+    }
+
+    public static Joystick getJoystick() {
+        return m_stick;
+    }
+
 }

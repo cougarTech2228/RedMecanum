@@ -9,39 +9,27 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.OI;
+import frc.robot.Toolkit.CT_DigitalInput;
 
 public class StorageSubsystem extends SubsystemBase {
     WPI_TalonSRX m_storageDrive = new WPI_TalonSRX(Constants.STORAGE_DRIVE_MOTOR_CAN_ID);
     WPI_TalonFX m_shooterFeed = new WPI_TalonFX(Constants.SHOOTER_FEED_MOTOR_CAN_ID);
-    private NetworkTableEntry m_driveVelocityEntry;
-    private NetworkTableEntry m_feedVelocityEntry;
-    private boolean m_driving, m_feeding;
+    CT_DigitalInput proximitySensor = new CT_DigitalInput(9);
+    private boolean m_isBallThere;
     public StorageSubsystem(){
         m_storageDrive.configFactoryDefault();
         m_shooterFeed.configFactoryDefault();
-
-        m_driveVelocityEntry = Shuffleboard.getTab("Storage Drive Velocity Adjuster").add("Drive Velocity", 1)
-    .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -1.0, "max", 1.0)).getEntry();
-    m_feedVelocityEntry = Shuffleboard.getTab("Shooter Feed Velocity Adjuster").add("Feed Velocity", 1)
-    .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -1.0, "max", 1.0)).getEntry();
     }
 
-    // @Override
-    // public void periodic(){
-    //     if(OI.getXboxXButton() && !m_driving){
-    //         m_storageDrive.set(ControlMode.PercentOutput, m_driveVelocityEntry.getDouble(0));
-    //         m_shooterFeed.set(ControlMode.PercentOutput, m_feedVelocityEntry.getDouble(0));
-    //         m_driving = true;
-    //     }
-    //     else if(OI.getXboxYButton() && m_driving){
-    //         m_storageDrive.stopMotor();
-    //         m_shooterFeed.stopMotor();
-    //         m_driving = false;
-    //     }
-    // }
+    @Override
+    public void periodic(){
+        m_isBallThere = !proximitySensor.get();
+        SmartDashboard.putBoolean("Ball Present", m_isBallThere);
+    }
 
     public void setDriveMotor(){
         m_storageDrive.set(ControlMode.PercentOutput, Constants.STORAGE_DRIVE_SPEED);
@@ -54,5 +42,8 @@ public class StorageSubsystem extends SubsystemBase {
     public void stopMotors(){
         m_storageDrive.stopMotor();
         m_shooterFeed.stopMotor();
+    }
+    public boolean isBallThere(){
+        return m_isBallThere;
     }
 }
