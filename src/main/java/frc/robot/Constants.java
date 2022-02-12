@@ -34,7 +34,7 @@ public final class Constants {
 
     public final static int kTimeoutMs = 30;
 
-	public static final double OPEN_RAMP_SECONDS_TO_FULL = .75;
+	public static final double OPEN_RAMP_SECONDS_TO_FULL = 2.0;
 	public static final double JOYSTICK_DEADBAND_PERCENTAGE = 0.1;
 
 	public static final int ACQUIRER_DEPLOY_MOTOR_CAN_ID = 22;

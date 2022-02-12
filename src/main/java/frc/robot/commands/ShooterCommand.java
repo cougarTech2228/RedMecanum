@@ -52,7 +52,8 @@ public class ShooterCommand extends SequentialCommandGroup{
   //   m_velocityEntry = Shuffleboard.getTab("Shooter Velocity Adjuster").add("Shooter Velocity", Constants.HIGH_SHOOT_SPEED)
   //   .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", Constants.SHOOTER_MAX_OUTPUT)).getEntry();
   //  m_velocityEntry.setDefaultNumber(0);
-
+    if(m_drivebaseSubsystem.getDrivingMode() == Constants.ACQUIRING_DRIVING_MODE)
+      return;
     switch(m_typeOfShot){
       case 1:
         executeHighAuto();
