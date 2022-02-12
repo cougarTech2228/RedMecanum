@@ -4,11 +4,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.OI;
+import frc.robot.commands.AlignToTargetCommand;
+import frc.robot.commands.AutonomousCommand;
 
 public class DrivebaseSubsystem extends SubsystemBase {
     private WPI_TalonFX m_rightFront = new WPI_TalonFX(Constants.RIGHT_FRONT_MOTOR_CAN_ID);
@@ -16,10 +18,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     private WPI_TalonFX m_leftFront = new WPI_TalonFX(Constants.LEFT_FRONT_MOTOR_CAN_ID);
     private WPI_TalonFX m_leftBack = new WPI_TalonFX(Constants.LEFT_REAR_MOTOR_CAN_ID);
 
-    private static final int kJoystickChannel = 0;
-
     private MecanumDrive m_robotDrive;
-    private static XboxController m_controller = new XboxController(0);
 
     public DrivebaseSubsystem() {
 
@@ -62,13 +61,26 @@ public class DrivebaseSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-
-        m_robotDrive.driveCartesian(deadband(-m_controller.getLeftY()),
-                deadband(m_controller.getLeftX()),
-                deadband(m_controller.getRightX()));
+        if(!AlignToTargetCommand.getAlignMode() && !AutonomousCommand.getIsAuto())// && !DriverStation.isAutonomous())
+        {
+        m_robotDrive.driveCartesian(deadband(-OI.getXboxLeftJoystickY()),
+                deadband(OI.getXboxLeftJoystickX()),
+                deadband(OI.getXboxRightJoystickX()));
+        } else {
+            m_robotDrive.feed();
+        }
     }
 
-    public static XboxController getController() {
-        return m_controller;
+    public void turn(double speed){
+        m_robotDrive.driveCartesian(0, 0, speed);
+    }
+    public void setMove(double ySpeed, double xSpeed){
+        m_robotDrive.driveCartesian(ySpeed, xSpeed, 0);
+    }
+    public void setMotorsToCoast(){
+        m_leftBack.setNeutralMode(NeutralMode.Coast);
+        m_leftFront.setNeutralMode(NeutralMode.Coast);
+        m_rightBack.setNeutralMode(NeutralMode.Coast);
+        m_rightFront.setNeutralMode(NeutralMode.Coast);
     }
 }

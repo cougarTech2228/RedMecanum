@@ -7,16 +7,15 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.OI;
 
 public class StorageSubsystem extends SubsystemBase {
-    WPI_TalonSRX m_storageDrive = new WPI_TalonSRX(Constants.STORAGE_DRIVE_CAN_ID);
-    WPI_TalonFX m_shooterFeed = new WPI_TalonFX(Constants.SHOOTER_FEED_CAN_ID);
-    XboxController controller = DrivebaseSubsystem.getController();
+    WPI_TalonSRX m_storageDrive = new WPI_TalonSRX(Constants.STORAGE_DRIVE_MOTOR_CAN_ID);
+    WPI_TalonFX m_shooterFeed = new WPI_TalonFX(Constants.SHOOTER_FEED_MOTOR_CAN_ID);
     private NetworkTableEntry m_driveVelocityEntry;
     private NetworkTableEntry m_feedVelocityEntry;
     private boolean m_driving, m_feeding;
@@ -30,21 +29,30 @@ public class StorageSubsystem extends SubsystemBase {
     .withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", -1.0, "max", 1.0)).getEntry();
     }
 
-    @Override
-    public void periodic(){
-        if(controller.getBButtonPressed() && !m_driving){
-            m_storageDrive.set(ControlMode.PercentOutput, m_driveVelocityEntry.getDouble(0));
-        }
-        else if(controller.getBButtonPressed() && m_driving){
-            m_storageDrive.stopMotor();
-        }
+    // @Override
+    // public void periodic(){
+    //     if(OI.getXboxXButton() && !m_driving){
+    //         m_storageDrive.set(ControlMode.PercentOutput, m_driveVelocityEntry.getDouble(0));
+    //         m_shooterFeed.set(ControlMode.PercentOutput, m_feedVelocityEntry.getDouble(0));
+    //         m_driving = true;
+    //     }
+    //     else if(OI.getXboxYButton() && m_driving){
+    //         m_storageDrive.stopMotor();
+    //         m_shooterFeed.stopMotor();
+    //         m_driving = false;
+    //     }
+    // }
 
-        if(controller.getYButtonPressed() && !m_feeding){
-            m_shooterFeed.set(ControlMode.PercentOutput, m_feedVelocityEntry.getDouble(0));
-        }
-        else if(controller.getYButtonPressed() && m_feeding){
-            m_shooterFeed.stopMotor();
-        }
+    public void setDriveMotor(){
+        m_storageDrive.set(ControlMode.PercentOutput, Constants.STORAGE_DRIVE_SPEED);
+
+    }
+    public void setFeedMotor(){
+        m_shooterFeed.set(ControlMode.PercentOutput, Constants.SHOOTER_FEED_SPEED);
     }
 
+    public void stopMotors(){
+        m_storageDrive.stopMotor();
+        m_shooterFeed.stopMotor();
+    }
 }

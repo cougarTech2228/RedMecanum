@@ -12,12 +12,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.OI;
 
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -25,7 +25,6 @@ public class ShooterSubsystem extends SubsystemBase {
   WPI_TalonFX m_shooterFollower;
 
   private NetworkTableEntry m_velocityEntry;
-  private XboxController m_xboxController = DrivebaseSubsystem.getController();
   private PowerDistribution m_pD = new PowerDistribution();
   private boolean isShooting = false;
 
@@ -51,21 +50,23 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stopMotors(){
     m_shooterMaster.stopMotor();
   }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    if(m_xboxController.getAButtonPressed() && !isShooting){
-      isShooting = true;
-      setMotors(m_velocityEntry.getDouble(0));
-   }
-   else if(m_xboxController.getAButtonPressed() && isShooting){
-      stopMotors();
-      isShooting = false;
-   }
-   SmartDashboard.putNumber("Leader Motor Draw", m_pD.getCurrent(9));
-   SmartDashboard.putNumber("Follower Motor Draw", m_pD.getCurrent(10));
-   SmartDashboard.putNumber("Motor Voltage", m_pD.getVoltage());
-  }
+  // @Override
+  // public void periodic() {
+  //   // calculation for motor velocity determined from network tables
+  //   //double percentToScore = calcPercentToShoot(ShooterVisionSubsystem.getDistanceFt()); 
+
+  //   if(OI.getXboxAButton() && !isShooting){
+  //     isShooting = true;
+  //     setMotors(m_velocityEntry.getDouble(0));
+  //  }
+  //  else if(OI.getXboxBButton() && isShooting){
+  //     stopMotors();
+  //     isShooting = false;
+  //  }
+  //  SmartDashboard.putNumber("Leader Motor Draw", m_pD.getCurrent(9));
+  //  SmartDashboard.putNumber("Follower Motor Draw", m_pD.getCurrent(10));
+  //  SmartDashboard.putNumber("Motor Voltage", m_pD.getVoltage());
+  // }
 
    private void configMotor(WPI_TalonFX motor){
 
@@ -83,4 +84,15 @@ public class ShooterSubsystem extends SubsystemBase {
         config.supplyCurrLimit.currentLimit = Constants.SHOOTER_CONTINUOUS_CURRENT_LIMIT;
         motor.configAllSettings(config);
     }
+
+
+public double getCalculatedShooterPercent(String shotType){
+  double distance = ShooterVisionSubsystem.getDistanceFt();
+  if(shotType.equals("High")){
+    return .5f; // replace with an equation
+  }
+  else{
+    return .5f; // replace with an equation
+  }
+}
 }
